@@ -1,23 +1,11 @@
-
+var log = console.log.bind(console);
 var myHeading = document.querySelector('h1');
 //myHeading.innerHTML = 'Hello world!';
-var myButton = document.querySelector('button');
-
-document.querySelector('img').onclick = function() {
-    alert('Ouch! Stop poking me!');
-}
-
-var myImage = document.querySelector('img');
-
-myImage.onclick = function() {
-    var mySrc = myImage.getAttribute('src');
-    if(mySrc === 'images/one_01.jpg') {
-      myImage.setAttribute ('src','images/one_02.jpg');
-    } else {
-      myImage.setAttribute ('src','images/one_01.jpg');
-    }
-}
-
+var myButton = document.getElementById('ch_u');
+var algo_button = document.getElementById('algo');
+var start_button = document.getElementById('start');
+var cover = document.getElementById('descDiv');
+log(cover);
 function setUserName() {
   var myName = prompt('Please enter your name.');
   localStorage.setItem('name', myName);
@@ -26,32 +14,38 @@ function setUserName() {
 
 if(!localStorage.getItem('name')) {
   setUserName();
-} else {
+}
+else {
   var storedName = localStorage.getItem('name');
   myHeading.innerHTML = storedName + '\'s ' + 'Eight Puzzle !';
 }
 
+var startFlag = 0;
 myButton.onclick = function() {
   setUserName();
 }
+algo_button.onclick = function() {
+  set_algo();
+}
+start_button.onclick = function() {
+   start();
+   cover.style.display = 'none';
+ }
+function set_algo() {
+  search();
+}
 
-
-
-var log = console.log.bind(console);
 var canvas = document.getElementById('puzzle');
-log(canvas);
+//log(canvas);
 var context = canvas.getContext('2d');
 
 var x = 160;
 var y = 160;
-
 var imageFromPath = function(path) {
   var img = new Image();
   img.src = path;
   return img;
 }
-
-
 var boardSize = document.getElementById('puzzle').width;
 var tileCount = 3;
 var tileSize = boardSize / tileCount ;
@@ -62,8 +56,6 @@ var emptyLoc = new Object;
 emptyLoc.x = 0;
 emptyLoc.y = 0;
 var solved = false;
-
-
 var boardParts = new Object;
 var Pos = new Array(tileCount*tileCount);
 var finalPos = new Array(1, 2, 3, 4, 5, 6, 7, 8, 0);
@@ -84,10 +76,9 @@ function setInitArr(initArr) {
   while(initArr.length<9) {
     var aa = Math.floor(Math.random()*9);
     var flag=true;
-    for(var i = 0; i < initArr.length; i++) {
+    for(var i = 0; i < initArr.length; ++i) {
       if(initArr[i]==aa) {
-        flag = false;
-        break;
+        flag = false;  break;
       }
     }
     if(flag) {
@@ -95,7 +86,7 @@ function setInitArr(initArr) {
       if(aa==0) {
         emptyLoc.x = Math.floor((initArr.length-1) / 3);
         emptyLoc.y = Math.floor((initArr.length-1) % 3);
-        log(emptyLoc.x, emptyLoc.y);
+        //log(emptyLoc.x, emptyLoc.y);
       }
     }
     if(initArr.length == 9) {
@@ -107,13 +98,13 @@ function setInitArr(initArr) {
       else initArr.splice(0, initArr.length);
     }
   }
-
 }
 //called in serBoard;
 function setBoard() {
   var initArr = [];
   setInitArr(initArr);
   console.log(initArr);
+
   boardParts = new Array(tileCount);
 
   for(var i = 0; i < tileCount; ++i) {
@@ -125,11 +116,10 @@ function setBoard() {
 
   solved = false;
 }
-setPos();
 setBoard();
-
+setPos();
 var oneImg = imageFromPath('images/one.jpg');
-function drawTiles() {
+var drawTiles = function() {
   context.clearRect (0, 0, boardSize, boardSize );
 
   for(var i = 0; i < tileCount; ++i) {
@@ -139,28 +129,44 @@ function drawTiles() {
       if(i != emptyLoc.x || j != emptyLoc.y || solved==true ) {
         context.drawImage(oneImg, y * tileSize,
           x * tileSize, tileSize, tileSize,
-          j * tileSize, i * tileSize, tileSize, tileSize);
+          j * tileSize, i * tileSize, tileSize, tileSize);//(image,s,d)
       }
-      //log(x,y);
     }
   }
 }
-oneImg.addEventListener('load', drawTiles, false);
+//context.drawImage(oneImg,0,0);
+var startFlag = 0;
+function start() {
+  if(startFlag==0) {
+    setBoard();
+    //oneImg.addEventListener('load', drawTiles, false);
+    drawTiles();
+    startFlag=1;
+  }
+}
+//setBoard();
+oneImg.addEventListener('load',
+  function() {
+    context.drawImage(oneImg,0,0);
+  } , false);
+//drawTiles();
+
+
 
 function distance(x1, y1, x2, y2) {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
-function slideTile(sLoc, tLoc) {
-  if(!solved) {
-    var t = boardParts[sLoc.x][sLoc.y];
-    boardParts[sLoc.x][sLoc.y] = boardParts[tLoc.x][tLoc.y];
-    boardParts[tLoc.x][tLoc.y] = t;
-    emptyLoc.x = tLoc.x;
-    emptyLoc.y = tLoc.y;
-  }
-  checkSolved();
+//called in slideTile;
+function swap(sLoc, tLoc) {
+  log(sLoc,tLoc);
+  var t = boardParts[sLoc.x][sLoc.y];
+  boardParts[sLoc.x][sLoc.y] = boardParts[tLoc.x][tLoc.y];
+  boardParts[tLoc.x][tLoc.y] = t;
+  emptyLoc.x = tLoc.x;
+  emptyLoc.y = tLoc.y;
 }
-function checkSolved() {
+//called in slideTile
+function checkSolved(k) {
   var flag = true;
   for(var i = 0; i<tileCount; ++i) {
     for(var j = 0; j<tileCount; ++j) {
@@ -169,6 +175,17 @@ function checkSolved() {
     }
   }
   solved = flag;
+  if(solved) {
+    startFlag = 0;
+  }
+}
+
+
+function slideTile(sLoc, tLoc) {
+  if(!solved) {
+    swap(sLoc, tLoc);
+  }
+  checkSolved();
 }
 
 canvas.onmousemove = function(e) {
@@ -179,6 +196,7 @@ canvas.onmousemove = function(e) {
 }
 canvas.onclick = function() {
   //log(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y);
+
   if(distance(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y) == 1) {
     slideTile(emptyLoc, clickLoc);
     drawTiles();
@@ -186,36 +204,7 @@ canvas.onclick = function() {
   if(solved) {
     setTimeout( function() {
       alert("You solved it!");
+      cover.style.display = 'block';
     }, 500 );
   }
 }
-
-
-//imgs[2].onload = function() {
-//  context.drawImage(imgs[2],x,y);
-//}
-
-var jigsaw = function(){
-  var image1 = imgs[0];
-  var o = {
-    image: image1,
-    x: x1,
-    y: y1,
-  }
-  return o;
-}
-
-
-window.addEventListener('keydown', function(event) {
-  log(event);
-  var k = event.key;
-  if(k == 'ArrowRight') {
-    x += 192;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(imgs[2],x,y);
-  } else if (k == 'ArrowLeft') {
-    x -= 192;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(imgs[2],x,y);
-  }
-})
