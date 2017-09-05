@@ -56,67 +56,6 @@ var get_hash = function (a) {
   return ret;
 }
 
-// function bi_bfs() {
-//   var x,y;
-//   vis1.fill(-1); pre.fill(0); vis2.fill(-1);
-//   while(!que1.isEmpty()&&!que2.isEmpty()) {
-//     var u = que1.dequeue();
-//     var v = u;
-//     var h1 = get_hash(u.a);
-//     log(h1);
-//     if(vis2[h1]!=-1) {  //encounter
-//       get_rd1(h1);
-//       get_rd2(h1);
-//       return;
-//     }
-//     //if not encounter
-//     else {
-//       for(var i=0; i<4; ++i) {
-//         x = u.x + dir[i][0]; y = u.y + dir[i][1];
-//         if(x<0||x>2||y<0||y>2) continue;
-//         v.a[u.x*3+u.y] = v.a[x*3+y];
-//         v.a[x*3+y] = 0;
-//         h2 = get_hash(v.a);
-//         if(vis1[h2]!=-1) continue;//had been visited
-//         else {
-//           log[h2];
-//           vis1[h2] = i;//road
-//           pre[h2] = h1;
-//           v.x = x; v.y = y;
-//           que1.enqueue(v);
-//         }
-//       }
-//     }
-//
-//     u = que2.dequeue();
-//     v = u;
-//     h1 = get_hash(u.a);
-//     log(h1);
-//     if(vis1[h1]!=-1) {  //encounter
-//       get_rd1(h1);
-//       get_rd2(h1);
-//       return;
-//     }
-//     //if not encounter
-//     else {
-//       for(var i=0; i<4; i++) {
-//         x = u.x + dir[i][0]; y = u.y + dir[i][1];
-//         if(x<0||x>2||y<0||y>2) continue;
-//         v.a[u.x*3+u.y] = v.a[x*3+y];
-//         v.a[x*3+y] = 0;
-//         h2 = get_hash(v.a);
-//         if(vis2[h2]!=-1) continue;//had been visited
-//         else {
-//           log[h2];
-//           vis2[h2] = i;//road
-//           pre[h2] = h1;
-//           v.x = x; v.y = y;
-//           que2.enqueue(v);
-//         }
-//       }
-//     }
-//   }
-// }
 
 var bi_bfs = function () {
   //init
