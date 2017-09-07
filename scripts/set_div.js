@@ -1,19 +1,15 @@
+var log = console.log.bind(console);
 var createDiv = function(){
 
     var descDiv = document.createElement('div');
     document.body.appendChild(descDiv);
     var canvas = document.getElementById('puzzle');
-    //log(canvas);
+    log(canvas);
     var context = canvas.getContext('2d');
-
-    var seatX = canvas.offsetLeft;
-    var seatY = canvas.offsetTop;
     var divWidth = canvas.offsetWidth;
     var divHeight = canvas.offsetHeight;
-
     var cssStr = "z-index:5;width:"+divWidth+"px;height:"+divHeight+"px;"+
-    "background-color:#f99655;position:absolute;display:block;left:"
-    + seatX + 'px;top:' + seatY + 'px;';
+    "background-color:#f99655;position:absolute;display:block";
 
     descDiv.style.cssText = cssStr;
     descDiv.innerHTML = '按下start按键开始游戏';

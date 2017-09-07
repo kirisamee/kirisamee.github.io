@@ -214,7 +214,7 @@ function set_time_out(i,fLoc, tLoc) {
     if(solved) {
       setTimeout( function() {
         alert("The algo solved it!");
-        cover.style.display = 'block';
+      //  cover.style.display = 'block';
       }, 500 );
     }
   } , i*500 );

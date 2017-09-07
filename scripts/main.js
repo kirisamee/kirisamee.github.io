@@ -19,7 +19,7 @@ else {
   var storedName = localStorage.getItem('name');
   myHeading.innerHTML = storedName + '\'s ' + 'Eight Puzzle !';
 }
-
+createDiv();
 var startFlag = 0;//have not repaired
 var algo_go = 0;
 myButton.onclick = function() {
