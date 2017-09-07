@@ -20,12 +20,16 @@ else {
   myHeading.innerHTML = storedName + '\'s ' + 'Eight Puzzle !';
 }
 
-var startFlag = 0;
+var startFlag = 0;//have not repaired
+var algo_go = 0;
 myButton.onclick = function() {
   setUserName();
 }
 algo_button.onclick = function() {
-  set_algo();
+  if(algo_go==0&&startFlag==1) {
+    set_algo();
+    algo_go = 1;
+  }
 }
 start_button.onclick = function() {
    start();
@@ -36,7 +40,7 @@ function set_algo() {
 }
 
 var canvas = document.getElementById('puzzle');
-//log(canvas);
+log(canvas);
 var context = canvas.getContext('2d');
 
 var x = 160;
@@ -104,24 +108,21 @@ function setBoard() {
   var initArr = [];
   setInitArr(initArr);
   console.log(initArr);
-
   boardParts = new Array(tileCount);
-
   for(var i = 0; i < tileCount; ++i) {
     boardParts[i] = new Array(tileCount);
     for(var j = 0; j < tileCount; ++j) {
       boardParts[i][j] = initArr[i*3+j];
     }
   }
-
   solved = false;
 }
+
 setBoard();
 setPos();
 var oneImg = imageFromPath('images/one.jpg');
 var drawTiles = function() {
   context.clearRect (0, 0, boardSize, boardSize );
-
   for(var i = 0; i < tileCount; ++i) {
     for(var j = 0; j < tileCount; ++j) {
       var x = Pos[boardParts[i][j]].x;
@@ -134,7 +135,12 @@ var drawTiles = function() {
     }
   }
 }
-//context.drawImage(oneImg,0,0);
+var draw_entire_photo = function() {
+  oneImg.addEventListener('load', function() {
+    context.drawImage(oneImg, 0 ,0);
+  }, false);
+}
+draw_entire_photo();
 var startFlag = 0;
 function start() {
   if(startFlag==0) {
@@ -145,10 +151,7 @@ function start() {
   }
 }
 //setBoard();
-oneImg.addEventListener('load',
-  function() {
-    context.drawImage(oneImg,0,0);
-  } , false);
+
 //drawTiles();
 
 
@@ -177,6 +180,7 @@ function checkSolved(k) {
   solved = flag;
   if(solved) {
     startFlag = 0;
+    algo_go = 0;
   }
 }
 

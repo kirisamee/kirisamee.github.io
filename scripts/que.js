@@ -1,3 +1,4 @@
+//template from baidu
 function Queue() {
     var items = [];
 
