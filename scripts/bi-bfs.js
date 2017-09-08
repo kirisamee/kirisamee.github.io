@@ -202,7 +202,7 @@ var fromLoc;
 var toLoc;
 function set_time_out(i,fLoc, tLoc) {
   setTimeout( function() {
-    log(fLoc,tLoc);
+    //log(fLoc,tLoc);
     slideTile(fLoc, tLoc);
     var te = []
     for(var i=0;i<9;++i) {
@@ -214,7 +214,6 @@ function set_time_out(i,fLoc, tLoc) {
     if(solved) {
       setTimeout( function() {
         alert("The algo solved it!");
-      //x  cover.style.display = 'block';
       }, 500 );
     }
   } , i*500 );
@@ -229,7 +228,7 @@ var solve = function () {
     board[i] = s.a[i];
     x = s.x; y = s.y;
   }
-  log(emptyLoc);
+  //log(emptyLoc);
   for(var i=0;i<result.length;++i) {
     x2 = x+ dir[result[i]][0]; y2 = y+dir[result[i]][1];
     fromLoc = new Object;

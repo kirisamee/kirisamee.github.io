@@ -33,7 +33,6 @@ algo_button.onclick = function() {
 }
 start_button.onclick = function() {
    start();
-   cover.style.display = 'none';
  }
 function set_algo() {
   search();
@@ -120,14 +119,14 @@ function setBoard() {
 
 setBoard();
 setPos();
-var oneImg = imageFromPath('images/one.jpg');
+var oneImg = imageFromPath('images/image.png');
 var drawTiles = function() {
   context.clearRect (0, 0, boardSize, boardSize );
   for(var i = 0; i < tileCount; ++i) {
     for(var j = 0; j < tileCount; ++j) {
       var x = Pos[boardParts[i][j]].x;
       var y = Pos[boardParts[i][j]].y;
-      if(i != emptyLoc.x || j != emptyLoc.y || solved==true ) {
+      if(i != emptyLoc.x || j != emptyLoc.y  ) {
         context.drawImage(oneImg, y * tileSize,
           x * tileSize, tileSize, tileSize,
           j * tileSize, i * tileSize, tileSize, tileSize);//(image,s,d)
@@ -137,7 +136,9 @@ var drawTiles = function() {
 }
 var draw_entire_photo = function() {
   oneImg.addEventListener('load', function() {
-    context.drawImage(oneImg, 0 ,0);
+    if(startFlag==0) {
+      context.drawImage(oneImg, 0 ,0);
+    }
   }, false);
 }
 draw_entire_photo();
@@ -153,15 +154,12 @@ function start() {
 //setBoard();
 
 //drawTiles();
-
-
-
 function distance(x1, y1, x2, y2) {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
 //called in slideTile;
 function swap(sLoc, tLoc) {
-  log(sLoc,tLoc);
+  //log(sLoc,tLoc);
   var t = boardParts[sLoc.x][sLoc.y];
   boardParts[sLoc.x][sLoc.y] = boardParts[tLoc.x][tLoc.y];
   boardParts[tLoc.x][tLoc.y] = t;
@@ -179,7 +177,11 @@ function checkSolved(k) {
   }
   solved = flag;
   if(solved) {
-    startFlag = 0;
+    startFlag=0;
+    setTimeout( function() {
+      log(startFlag);
+        context.drawImage(oneImg, 0 ,0);
+    }, 500 );
     algo_go = 0;
   }
 }
@@ -201,14 +203,13 @@ canvas.onmousemove = function(e) {
 canvas.onclick = function() {
   //log(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y);
 
-  if(distance(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y) == 1) {
+  if(!algo_go&&distance(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y) == 1) {
     slideTile(emptyLoc, clickLoc);
     drawTiles();
   }
   if(solved) {
     setTimeout( function() {
       alert("You solved it!");
-    //  cover.style.display = 'block';
     }, 500 );
   }
 }
